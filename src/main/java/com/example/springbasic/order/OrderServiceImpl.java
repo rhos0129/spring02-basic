@@ -8,8 +8,7 @@ import com.example.springbasic.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService{
 
-    // 메모리 회원 리포지토리와 정액 할인 정책에 의존
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    private final MemberRepository memberRepository;
 
 //    // 문제발생 : 클라이언트 코드 변경 필요
 //    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
@@ -18,6 +17,11 @@ public class OrderServiceImpl implements OrderService{
     // 지금은 실행시 NPE(null pointer exception)가 발생
     // 누군가가 클라이언트인 OrderServiceImpl에 DiscountPolicy의 구현 객체를 대신 생성하고 주입해주어야 한다.
     private final DiscountPolicy discountPolicy;
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
