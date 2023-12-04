@@ -29,5 +29,18 @@ public class ConfigurationSingletonTest {
         assertThat(memberService.getMemberRepository()).isSameAs(memberRepository);
         assertThat(orderService.getMemberRepository()).isSameAs(memberRepository);
     }
-    
+
+    @Test
+    void configurationDeep() {
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+        AppConfig bean = ac.getBean(AppConfig.class);
+
+        // @Configuration이 적용된 AppConfig
+        // class com.example.springbasic.AppConfig$$SpringCGLIB$$0 (순수한 클래스 X)
+        // @Configuration이 적용되지 않은 AppConfig 조회
+        // class com.example.springbasic.AppConfig (순수한 클래스 O)
+        System.out.println("bean = " + bean.getClass());
+
+    }
+
 }
