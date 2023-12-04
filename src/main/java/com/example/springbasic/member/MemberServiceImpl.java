@@ -3,6 +3,7 @@ package com.example.springbasic.member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+//@Component("service")
 @Component
 public class MemberServiceImpl implements MemberService{
 
