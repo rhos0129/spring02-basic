@@ -10,7 +10,14 @@ public class OrderServiceImpl implements OrderService{
 
     // 메모리 회원 리포지토리와 정액 할인 정책에 의존
     private final MemberRepository memberRepository = new MemoryMemberRepository();
-    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
+
+//    // 문제발생 : 클라이언트 코드 변경 필요
+//    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
+
+    // 해결방안 : 인터페이스에만 의존하도록 설계를 변경
+    // 지금은 실행시 NPE(null pointer exception)가 발생
+    // 누군가가 클라이언트인 OrderServiceImpl에 DiscountPolicy의 구현 객체를 대신 생성하고 주입해주어야 한다.
+    private final DiscountPolicy discountPolicy;
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
