@@ -1,5 +1,6 @@
 package com.example.springbasic;
 
+import com.example.springbasic.discount.DiscountPolicy;
 import com.example.springbasic.discount.FixDiscountPolicy;
 import com.example.springbasic.member.MemberService;
 import com.example.springbasic.member.MemberServiceImpl;
@@ -12,12 +13,20 @@ import com.example.springbasic.order.OrderServiceImpl;
 // 생성한 객체 인스턴스의 참조를 생성자를 통해서 주입
 public class AppConfig {
 
+    private MemoryMemberRepository memberRepository() {
+        return new MemoryMemberRepository();
+    }
+
     public MemberService memberService(){
-        return new MemberServiceImpl(new MemoryMemberRepository());
+        return new MemberServiceImpl(memberRepository());
     }
 
     public OrderService orderService(){
-        return new OrderServiceImpl(new MemoryMemberRepository(), new FixDiscountPolicy());
+        return new OrderServiceImpl(memberRepository(), discountPolicy());
+    }
+
+    private DiscountPolicy discountPolicy() {
+        return new FixDiscountPolicy();
     }
 
 }
