@@ -17,18 +17,37 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
 
-    @Bean // 스프링 빈 등록
+    // 각각 다른 2개의 MemoryMemberRepository가 생성되면서 싱글톤이 깨지는 것처럼 보인다.
+    // @Bean memberService > new MemoryMemberRepository()
+    // @Bean orderService > new MemoryMemberRepository()
+
+    // 예상 호출 3번
+    // call AppConfig.memberRepository *
+    // call AppConfig.memberService
+    // call AppConfig.memberRepository *
+    // call AppConfig.orderService
+    // call AppConfig.memberRepository *
+
+    // 실제 호출 1번 > 싱글톤 보장
+    // call AppConfig.memberRepository *
+    // call AppConfig.memberService
+    // call AppConfig.orderService
+
+    @Bean
     public MemoryMemberRepository memberRepository() {
+        System.out.println("call AppConfig.memberRepository");
         return new MemoryMemberRepository();
     }
 
     @Bean
     public MemberService memberService(){
+        System.out.println("call AppConfig.memberService");
         return new MemberServiceImpl(memberRepository());
     }
 
     @Bean
     public OrderService orderService(){
+        System.out.println("call AppConfig.orderService");
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
