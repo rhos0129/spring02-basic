@@ -2,6 +2,7 @@ package com.example.springbasic;
 
 import com.example.springbasic.discount.DiscountPolicy;
 import com.example.springbasic.discount.FixDiscountPolicy;
+import com.example.springbasic.discount.RateDiscountPolicy;
 import com.example.springbasic.member.MemberService;
 import com.example.springbasic.member.MemberServiceImpl;
 import com.example.springbasic.member.MemoryMemberRepository;
@@ -26,7 +27,8 @@ public class AppConfig {
     }
 
     private DiscountPolicy discountPolicy() {
-        return new FixDiscountPolicy();
+//        return new FixDiscountPolicy();
+        return new RateDiscountPolicy(); // 사용영역의 코드 변경 없이 여기 한줄만 수정하면 된다/
     }
 
 }
