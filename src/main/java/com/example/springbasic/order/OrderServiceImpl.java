@@ -1,5 +1,6 @@
 package com.example.springbasic.order;
 
+import com.example.springbasic.annotation.MainDiscountPolicy;
 import com.example.springbasic.discount.DiscountPolicy;
 import com.example.springbasic.member.Member;
 import com.example.springbasic.member.MemberRepository;
@@ -9,11 +10,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
 
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
+
+    // 커스텀 어노테이션 이용
+    public OrderServiceImpl(MemberRepository memberRepository, @MainDiscountPolicy DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
 //    // @Autowired 필드명 매칭
 //    @Autowired
