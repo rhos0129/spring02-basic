@@ -19,6 +19,9 @@ public class BeanLifeCycleTest {
         // connect : null
         // call : null message = 초기화 연결 메시지
 
+        // 인터페이스 InitializingBean, DisposableBean =====
+        // 결과 : 생성자에서는 url=null, 서비스 시작 및 종료 시에는 url 출력
+
     }
 
     @Configuration
