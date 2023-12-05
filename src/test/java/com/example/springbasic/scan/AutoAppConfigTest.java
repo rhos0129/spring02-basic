@@ -1,13 +1,15 @@
 package com.example.springbasic.scan;
 
 import com.example.springbasic.AutoAppConfig;
+import com.example.springbasic.member.MemberRepository;
 import com.example.springbasic.member.MemberService;
+import com.example.springbasic.order.OrderServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class AutoAppconfigTest {
+public class AutoAppConfigTest {
 
     @Test
     void basicScan(){
@@ -16,8 +18,14 @@ public class AutoAppconfigTest {
         MemberService memberService = ac.getBean(MemberService.class);
         assertThat(memberService).isInstanceOf(MemberService.class);
 
-        // 자동 빈 등록 vs 자동 빈 등록
-        // 이름이 중복되는 경우 ConflictingBeanDefinitionException 예외 발생
+        // 생성자 주입 (권장)
+        // 수정자 주입 (가끔사용)
+        // 필드 주입 (권장X)
+        // 일반 메서드 주입 (거의사용X)
+        OrderServiceImpl orderService = ac.getBean(OrderServiceImpl.class);
+        MemberRepository memberRepository = orderService.getMemberRepository();
+        System.out.println("memberRepository = " + memberRepository);
+
     }
 
 }

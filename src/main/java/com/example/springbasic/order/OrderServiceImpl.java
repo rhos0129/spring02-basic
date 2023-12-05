@@ -12,21 +12,49 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderServiceImpl implements OrderService{
 
+    // 생성자 주입 ==========
     private final MemberRepository memberRepository;
-
-//    // 문제발생 : 클라이언트 코드 변경 필요
-//    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
-
-    // 해결방안 : 인터페이스에만 의존하도록 설계를 변경
-    // 지금은 실행시 NPE(null pointer exception)가 발생
-    // 누군가가 클라이언트인 OrderServiceImpl에 DiscountPolicy의 구현 객체를 대신 생성하고 주입해주어야 한다.
     private final DiscountPolicy discountPolicy;
 
-    @Autowired
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        System.out.println("생성자 주입의 memberRepository = " + memberRepository);
+        System.out.println("생성자 주입의 discountPolicy = " + discountPolicy);
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }
+
+
+//    // 수정자 주입 ==========
+//    private MemberRepository memberRepository;
+//    private DiscountPolicy discountPolicy;
+//
+//    @Autowired
+//    public void setMemberRepository(MemberRepository memberRepository){
+//        System.out.println("setter 주입의 memberRepository = " + memberRepository);
+//        this.memberRepository = memberRepository;
+//    }
+//
+//    @Autowired
+//    public void setDiscountPolicy(DiscountPolicy discountPolicy){
+//        System.out.println("setter 주입의 discountPolicy = " + discountPolicy);
+//        this.discountPolicy = discountPolicy;
+//    }
+
+
+//    // 필드 주입 ==========
+//    @Autowired private MemberRepository memberRepository;
+//    @Autowired private DiscountPolicy discountPolicy;
+
+
+//    // 일반 메서드 주입 ==========
+//    private MemberRepository memberRepository;
+//    private DiscountPolicy discountPolicy;
+//    @Autowired
+//    public void init(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+//        this.memberRepository = memberRepository;
+//        this.discountPolicy = discountPolicy;
+//    }
+
 
     // 테스트 용도
     public MemberRepository getMemberRepository() {
