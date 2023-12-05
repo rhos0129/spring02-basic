@@ -2,7 +2,10 @@ package com.example.springbasic.scope;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.inject.Provider;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -36,41 +39,28 @@ public class SingletonWithPrototypeTest1 {
         ClientBean clientBean2 = ac.getBean(ClientBean.class);
         System.out.println("clientBean2 = " + clientBean2.getClass());
         int count2 = clientBean2.logic();
-        assertThat(count2).isEqualTo(2); // 1이 아닌 2 (문제발생)
-
-        // clientBean이 생성될 때 마다 prototypeBean은 새로 생성되지 않는다. 따라서 count가 유지된다.
-        // clientBean이 내부에 가지고 있는 prototypeBean은 생성 시점에 이미 주입받았기 때문이다.
+        assertThat(count2).isEqualTo(1); // 원하는대로 1 (문제해결)
 
     }
 
     @Scope("singleton")
     static class ClientBean {
 
-        private final PrototypeBean prototypeBean; // 생성시점에 주입 * 01
+//        // 해결방안2 ObjectFactory<>, ObjectProvider<>의 DL기능 이용 (권장)
+//        // ObjectFactory : 기능이 단순, 별도의 라이브러리 필요 없음, 스프링에 의존
+//        // ObjectProvider : ObjectFactory 상속받아 편의 기능이 많음, 별도의 라이브러리 필요 없음, 스프링에 의존
+//        @Autowired
+////        private ObjectFactory<PrototypeBean> prototypeBeanProvider;
+//        private ObjectProvider<PrototypeBean> prototypeBeanProvider;
 
+        // 해결방안3 Provider<> 이용
+        // Provider : 별도의 라이브러리가 필요. 자바 표준이므로 스프링이 아닌 다른 컨테이너에서도 사용 가능
         @Autowired
-        public ClientBean(PrototypeBean prototypeBean) {
-            this.prototypeBean = prototypeBean;
-        }
+        private Provider<PrototypeBean> prototypeBeanProvider;
 
         public int logic(){
-            prototypeBean.addCount();
-            return prototypeBean.count;
-        }
-    }
-
-    // 해결방안1 동일한 싱글톤 빈을 여러개 생성 (비권장)
-    @Scope("singleton")
-    static class ClientBean2 {
-
-        private final PrototypeBean prototypeBean; // 생성시점에 주입 * 02
-
-        @Autowired
-        public ClientBean2(PrototypeBean prototypeBean) {
-            this.prototypeBean = prototypeBean;
-        }
-
-        public int logic(){
+//            PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
+            PrototypeBean prototypeBean = prototypeBeanProvider.get();
             prototypeBean.addCount();
             return prototypeBean.count;
         }
@@ -90,12 +80,12 @@ public class SingletonWithPrototypeTest1 {
 
         @PostConstruct
         public void init(){
-            System.out.println("PrototypeBean.init");
+            System.out.println("PrototypeBean.init " + this);
         }
 
         @PreDestroy
         public void destroy(){
-            System.out.println("PrototypeBean.destroy");
+            System.out.println("PrototypeBean.destroy " + this);
         }
     }
 }
