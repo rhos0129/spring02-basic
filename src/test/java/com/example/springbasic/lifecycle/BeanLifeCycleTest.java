@@ -21,17 +21,15 @@ public class BeanLifeCycleTest {
 
         // 인터페이스 InitializingBean, DisposableBean =====
         // @Bean의 destroyMethod, destroyMethod속성 =====
+        // @PostConstruct, @PreDestroy =====
         // 결과 : 생성자에서는 url = null, 서비스 시작 및 종료 시에는 url 출력
-
-
-
 
     }
 
     @Configuration
     static class LifeCycleConfig{
 
-        @Bean(initMethod = "init")
+        @Bean
         public NetworkClient networkClient(){
             NetworkClient networkClient = new NetworkClient();
             networkClient.setUrl("http://hello-spring.dev");
