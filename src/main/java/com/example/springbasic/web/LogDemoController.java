@@ -14,15 +14,15 @@ public class LogDemoController {
 
     private final LogDemoService  logDemoService;
 
-//    private final MyLogger myLogger;
-    private final ObjectProvider<MyLogger> myLoggerProvider; // 해결방안1 ObjectProvider<> 이용
+    private final MyLogger myLogger;
+//    private final ObjectProvider<MyLogger> myLoggerProvider; // 해결방안1 ObjectProvider<> 이용
 
     // 정상작동
     @RequestMapping("log-demo")
     @ResponseBody
     public String logDemo(HttpServletRequest request){
         String requestURL = request.getRequestURL().toString();
-        MyLogger myLogger = myLoggerProvider.getObject();
+//        MyLogger myLogger = myLoggerProvider.getObject();
         myLogger.setRequestURL(requestURL);
 
         myLogger.log("controller test");
